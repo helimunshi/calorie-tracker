@@ -225,13 +225,12 @@ main { padding: 24px 20px 0; }
 .bottom-sheet input:not([type="hidden"]) { width: 100%; height: 48px; margin-bottom: 18px; padding: 0 13px; border: 1.5px solid #c9c9c9; border-radius: 9px; background: #f7f7f7; color: var(--text); font-size: 18px; outline: none; }
 .bottom-sheet input:focus { border-color: #171717; box-shadow: 0 0 0 1px #171717; background: white; }
 .bottom-sheet input::placeholder { color: #a4a4a8; }
-.calories-control { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 9px; margin-bottom: 18px; }
+.calories-control { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 9px; margin-bottom: 24px; }
 .bottom-sheet .calories-control input { margin-bottom: 0; }
 .sign-toggle { display: grid; grid-template-columns: repeat(2, 42px); gap: 4px; padding: 3px; border-radius: 10px; background: var(--soft); }
 .sign-button { width: 42px; height: 42px; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font-size: 23px; line-height: 1; font-weight: 700; cursor: pointer; }
 .sign-button.selected { background: #171717; color: white; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 .sign-button:focus-visible { outline: 2px solid #171717; outline-offset: 2px; }
-.helper-text { margin: 0 0 24px; color: var(--muted); font-size: 15px; line-height: 1.35; }
 body.sheet-open { overflow: hidden; }
 
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
