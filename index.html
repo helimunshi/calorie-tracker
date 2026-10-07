@@ -11,7 +11,7 @@
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="icons/icon-192.png" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=7" />
     <title>Calorie Ledger</title>
   </head>
   <body>
@@ -83,14 +83,20 @@
           <label for="item-name">Item name</label>
           <input id="item-name" name="name" type="text" placeholder="e.g. Lunch, Exercise" autocomplete="off" maxlength="80" required />
           <label for="calories">Calories</label>
-          <input id="calories" name="calories" type="number" placeholder="e.g. 650 or -200" step="1" inputmode="numeric" required />
-          <p class="helper-text">Use a negative number for calorie-burning activities like exercise.</p>
+          <div class="calories-control">
+            <div class="sign-toggle" role="group" aria-label="Calorie sign">
+              <button class="sign-button selected" id="positive-sign" type="button" aria-pressed="true" aria-label="Positive calories">+</button>
+              <button class="sign-button" id="negative-sign" type="button" aria-pressed="false" aria-label="Negative calories">−</button>
+            </div>
+            <input id="calories" name="calories" type="text" inputmode="decimal" placeholder="e.g. 650" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-describedby="calories-help" required />
+          </div>
+          <p class="helper-text" id="calories-help">Choose − for calorie-burning activities like exercise.</p>
           <button class="primary-button" id="entry-submit" type="submit">Add entry</button>
           <button class="secondary-button" type="button" data-close-sheet>Cancel</button>
         </form>
       </section>
     </div>
 
-    <script src="app.js" defer></script>
+    <script src="app.js?v=7" defer></script>
   </body>
 </html>

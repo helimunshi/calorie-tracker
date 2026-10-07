@@ -21,6 +21,8 @@ const els = {
   entryId: document.querySelector("#entry-id"),
   itemName: document.querySelector("#item-name"),
   calories: document.querySelector("#calories"),
+  positiveSign: document.querySelector("#positive-sign"),
+  negativeSign: document.querySelector("#negative-sign"),
   addEntry: document.querySelector("#add-entry"),
   emptyState: document.querySelector("#empty-state"),
   entryList: document.querySelector("#entry-list")
@@ -162,6 +164,7 @@ function closeSheet(sheet) {
 function openNewEntry() {
   els.entryForm.reset();
   els.entryId.value = "";
+  setCalorieSign(1);
   els.entrySheetTitle.textContent = "Add Entry";
   els.entrySubmit.textContent = "Add entry";
   openSheet(els.entrySheet, els.itemName);
@@ -172,10 +175,20 @@ function openEditEntry(id) {
   if (!entry) return;
   els.entryId.value = entry.id;
   els.itemName.value = entry.name;
-  els.calories.value = entry.calories;
+  els.calories.value = Math.abs(entry.calories);
+  setCalorieSign(entry.calories < 0 ? -1 : 1);
   els.entrySheetTitle.textContent = "Edit Entry";
   els.entrySubmit.textContent = "Save changes";
   openSheet(els.entrySheet, els.itemName);
+}
+
+function setCalorieSign(sign) {
+  const isNegative = sign < 0;
+  els.entryForm.dataset.calorieSign = isNegative ? "-1" : "1";
+  els.positiveSign.classList.toggle("selected", !isNegative);
+  els.negativeSign.classList.toggle("selected", isNegative);
+  els.positiveSign.setAttribute("aria-pressed", String(!isNegative));
+  els.negativeSign.setAttribute("aria-pressed", String(isNegative));
 }
 
 els.previousDay.addEventListener("click", () => shiftDate(-1));
@@ -196,6 +209,8 @@ els.editGoal.addEventListener("click", () => {
   openSheet(els.goalSheet, els.goalInput);
 });
 els.addEntry.addEventListener("click", openNewEntry);
+els.positiveSign.addEventListener("click", () => setCalorieSign(1));
+els.negativeSign.addEventListener("click", () => setCalorieSign(-1));
 
 document.querySelectorAll("[data-close-sheet]").forEach(button => {
   button.addEventListener("click", () => closeSheet(button.closest(".sheet-layer")));
@@ -214,7 +229,16 @@ els.goalForm.addEventListener("submit", event => {
 els.entryForm.addEventListener("submit", event => {
   event.preventDefault();
   const name = els.itemName.value.trim();
-  const calorieValue = Math.round(Number(els.calories.value));
+  const calorieText = els.calories.value.trim();
+  const isAbsoluteNumber = /^(?:\d+(?:\.\d+)?|\.\d+)$/.test(calorieText);
+
+  if (!isAbsoluteNumber) {
+    els.calories.setCustomValidity("Enter a positive number such as 100 or 250.5, then choose + or −.");
+    els.calories.reportValidity();
+    return;
+  }
+
+  const calorieValue = Number(calorieText) * Number(els.entryForm.dataset.calorieSign || 1);
   if (!name || !Number.isFinite(calorieValue)) return;
 
   const entries = [...selectedEntries()];
@@ -228,6 +252,8 @@ els.entryForm.addEventListener("submit", event => {
   render();
   closeSheet(els.entrySheet);
 });
+
+els.calories.addEventListener("input", () => els.calories.setCustomValidity(""));
 
 els.entryList.addEventListener("click", event => {
   const row = event.target.closest(".entry-item");

@@ -1,9 +1,9 @@
-const CACHE_NAME = "calorie-ledger-v3";
+const CACHE_NAME = "calorie-ledger-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
+  "./styles.css?v=7",
+  "./app.js?v=7",
   "./manifest.json",
   "./icons/icon.svg",
   "./icons/icon-192.png",
@@ -12,7 +12,16 @@ const APP_SHELL = [
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => Promise.all(APP_SHELL.map(url =>
+        fetch(url, { cache: "reload" }).then(response => {
+          if (!response.ok) throw new Error(`Unable to cache ${url}`);
+          return cache.put(url, response);
+        })
+      )))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", event => {
